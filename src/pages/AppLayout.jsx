@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { isAuthenticated } from "../handlers/authHandler";
+import {
+  isAuthenticated,
+  isAuthenticatedPartner,
+} from "../handlers/authHandler";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Loading, SideBar, TopNav } from "../components";
 import { Box, colors, Toolbar } from "@mui/material";
@@ -9,12 +12,28 @@ const AppLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkToken = async () => {
-      const res = await isAuthenticated();
-      if (!res) return navigate("/login");
-      setIsLoading(false);
-    };
-    checkToken();
+    if (localStorage.getItem("token")) {
+      const checkToken = async () => {
+        const res = await isAuthenticated();
+        if (!res) return navigate("/login/partner");
+        setIsLoading(false);
+      };
+      checkToken();
+    }
+    if (localStorage.getItem("tokenPartner")) {
+      const checkTokenPartner = async () => {
+        const res = await isAuthenticatedPartner();
+        if (!res) return navigate("/login/partner");
+        setIsLoading(false);
+      };
+      checkTokenPartner();
+    }
+    if (
+      !localStorage.getItem("token") &&
+      !localStorage.getItem("tokenPartner")
+    ) {
+      navigate("/login/partner");
+    }
   }, []);
 
   return isLoading ? (

@@ -13,3 +13,7 @@ export { default as PlaceRoom } from "./PlaceRoom";
 export { default as PlaceCreate } from "./PlaceCreate";
 export { default as EditPlace } from "./EditPlace";
 export { default as UserCheck } from "./UserCheck";
+export { default as LoginPartner } from "./LoginPartner";
+export { default as Partner } from "./Partner";
+export { default as PartnerCreate } from "./PartnerCreate";
+export { default as PartnerEdit } from "./PartnerEdit";

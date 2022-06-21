@@ -6,8 +6,6 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
-import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
-import partnerApi from "../api/partnerApi";
 
 import {
   colors,
@@ -19,79 +17,56 @@ import {
   Toolbar,
 } from "@mui/material";
 
-const SideBar = () => {
+const SideBarPartner = () => {
   const location = useLocation();
   const sideBarWidth = 300;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [partner, setPartner] = useState(localStorage.getItem("idPartner"));
-
-  useEffect(() => {
-    const getPartner = async () => {
-      try {
-        const res = await partnerApi.getOne(partner);
-        setPartner(res);
-        // console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPartner();
-  }, []);
 
   useEffect(() => {
     const activeItem = sideBarItems.findIndex(
       (item) =>
-        window.location.pathname.split("/")[1] === item.path.split("/")[1]
+        window.location.pathname.split("/partner")[1] ===
+        item.path.split("/partner")[1]
     );
     setActiveIndex(activeItem);
   }, [location]);
 
   const sideBarItems = [
     {
-      text: "Trang Chủ",
-      path: "/",
-      icon: <GridViewOutlinedIcon />,
       display: true,
+      text: "Trang Chủ",
+      path: "/partner",
+      icon: <GridViewOutlinedIcon />,
     },
     {
       text: "Người Dùng",
-      path: "/user",
+      path: "/partner/user",
       icon: <PersonOutlineOutlinedIcon />,
-      display: localStorage.getItem("token") ? true : partner.permissionUser,
+      display: true,
     },
     {
       text: "Địa Điểm",
-      path: "/placeroom",
+      path: "/partner/placeroom",
       icon: <PlaceOutlinedIcon />,
-      display: localStorage.getItem("token") ? true : partner.permissionPlace,
+      display: true,
     },
     {
       text: "Thông Tin Vaccine",
-      path: "/vaccine",
+      path: "/partner/vaccine",
       icon: <HealthAndSafetyOutlinedIcon />,
-      display: localStorage.getItem("token")
-        ? true
-        : partner.permissionInfoVaccine,
+      display: true,
     },
     {
       text: "Truy Vết Khai Báo",
-      path: "/check",
+      path: "/partner/check",
       icon: <PersonSearchOutlinedIcon />,
-      display: localStorage.getItem("token")
-        ? true
-        : partner.permissionDeclaration,
+      display: true,
     },
     {
       text: "Quét Mã Nhanh",
-      path: "/qr-scan",
+      path: "/partner/qr-scan",
       icon: <QrCodeScannerOutlinedIcon />,
-      display: localStorage.getItem("token") ? true : partner.permissionScan,
-    },
-    {
-      text: "Đối Tác",
-      path: "/partner/admin",
-      icon: <AccessibilityNewIcon />,
-      display: localStorage.getItem("token") ? true : false,
+      display: true,
     },
   ];
 
@@ -129,7 +104,6 @@ const SideBar = () => {
               "&.Mui-selected:hover": {
                 backgroundColor: colors.blue["200"],
               },
-              display: item.display ? "flex" : "none",
             }}
           >
             <ListItemIcon
@@ -154,4 +128,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default SideBarPartner;

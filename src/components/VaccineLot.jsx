@@ -21,7 +21,7 @@ import vaccineLotApi from "../api/vaccineLotApi";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 const VaccineLot = ({ vaccine, onLotAdded, onLotDelete, onLotUpdated }) => {
-  //  console.log(vaccine.vaccineLots);
+  console.log(vaccine.vaccineLots);
   const [pageSize, setPageSize] = useState(5);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [onSubmit, setOnSubmit] = useState(false);
@@ -63,7 +63,7 @@ const VaccineLot = ({ vaccine, onLotAdded, onLotDelete, onLotUpdated }) => {
         (params.row.quantity - params.row.vaccinated).toLocaleString("de-DE"),
     },
     {
-      field: "createAt",
+      field: "createdAt",
       headerName: "Ngày Khai Báo",
       width: 130,
       align: "center",

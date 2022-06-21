@@ -27,7 +27,7 @@ const Dashboard = () => {
     const getData = async () => {
       try {
         const res = await adminApi.getSummary();
-        console.log(res);
+        // console.log(res);
         setSummaryData(res);
       } catch (error) {
         console.log(error);
@@ -202,7 +202,7 @@ const SummaryInfo = ({ title, number, icon }) => {
 };
 
 const VaccinatedChart = ({ chartData }) => {
-  console.log(chartData);
+  // console.log(chartData);
   ChartJS.register(ArcElement, Tooltip, Legend);
   const data = {
     labels: [
@@ -282,7 +282,7 @@ const LatestVaccineLotTable = ({ list }) => {
       renderCell: (params) => moment(params.value).format("DD/MM/YYYY"),
     },
     {
-      field: "",
+      field: "ok",
       headerName: "Giờ Tạo",
       flex: 1,
       align: "center",

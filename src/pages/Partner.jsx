@@ -6,35 +6,37 @@ import { Button, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import placeApi from "../api/placeApi";
+import partnerApi from "../api/partnerApi";
 import { PageHeader } from "../components";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
-const PlaceRoom = () => {
-  const [placeList, setPlaceList] = useState([]);
+import { LoadingButton } from "@mui/lab";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+
+const Partner = () => {
+  const [partnerList, setPartnerList] = useState([]);
   const [pageSize, setPageSize] = useState(9);
   const [onDelete, setOnDelete] = useState(false);
 
   useEffect(() => {
-    const getPlaces = async () => {
+    const getPartner = async () => {
       try {
-        const res = await placeApi.getAll();
-        setPlaceList(res);
+        const res = await partnerApi.getAll();
+        setPartnerList(res);
+        // console.log(partnerList);
       } catch (err) {
         console.log(err);
       }
     };
-    getPlaces();
+    getPartner();
   }, []);
 
-  const deleteLot = async (lotId) => {
-    // console.log(lotId);
+  const deleteLot = async (id) => {
     if (onDelete) return;
     setOnDelete(true);
     try {
-      await placeApi.delete(lotId);
-      const res = await placeApi.getAll();
-      setPlaceList(res);
+      await partnerApi.delete(id);
+      const res = await partnerApi.getAll();
+      setPartnerList(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -44,13 +46,13 @@ const PlaceRoom = () => {
 
   const tableHeader = [
     {
-      field: "name",
-      headerName: "Tên Địa Điểm",
+      field: "fullName",
+      headerName: "Tên Đối Tác",
       flex: 1,
     },
     {
-      field: "address",
-      headerName: "Khu Vực",
+      field: "password",
+      headerName: "mật khẩu",
       flex: 1,
     },
 
@@ -58,23 +60,13 @@ const PlaceRoom = () => {
       field: "_id",
       headerName: "Tác Vụ",
       flex: 1,
+
       renderCell: (params) => (
         <>
           <Button
             variant="text"
             component={Link}
-            to={`/place/${params.row.id}`}
-            endIcon={<RemoveRedEyeIcon />}
-          >
-            Xem
-          </Button>
-
-          {"|"}
-
-          <Button
-            variant="text"
-            component={Link}
-            to={`/place/edit/${params.value}`}
+            to={`/partner/admin/edit/${params.value}`}
             startIcon={<LaunchOutlinedIcon />}
           >
             Sửa
@@ -99,22 +91,22 @@ const PlaceRoom = () => {
   return (
     <>
       <PageHeader
-        title="Thống Kê Địa Điểm"
+        title="Quản Lí Đối Tác"
         rightContent={
           <Button
             variant="contained"
             component={Link}
-            to="/place/create"
-            startIcon={<PlaceOutlinedIcon />}
+            to="/partner/admin/create"
+            startIcon={<AccessibilityNewIcon />}
           >
-            Tạo Phòng
+            Tạo Đối Tác
           </Button>
         }
       />
       <Paper elevation={0}>
         <DataGrid
           autoHeight
-          rows={placeList}
+          rows={partnerList}
           columns={tableHeader}
           pageSize={pageSize}
           onPageSizeChange={(size) => setPageSize(size)}
@@ -127,4 +119,4 @@ const PlaceRoom = () => {
   );
 };
 
-export default PlaceRoom;
+export default Partner;

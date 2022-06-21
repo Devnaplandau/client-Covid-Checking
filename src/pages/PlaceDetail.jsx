@@ -63,7 +63,7 @@ const PlaceDetail = () => {
       renderCell: (params) => params.row.user.address,
     },
     {
-      field: "createAt",
+      field: "createdAt",
       headerName: "Ngày Khai Báo",
       flex: 1,
       renderCell: (params) => moment(params.value).format("DD/MM/YYYY"),

@@ -48,13 +48,13 @@ const Vaccine = () => {
       flex: 1,
       renderCell: (params) => params.value.toLocaleString("de-DE"),
     },
-    {
-      field: "vaccinated",
-      headerName: "Vaccine Đã Tiêm",
-      align: "center",
-      flex: 1,
-      renderCell: (params) => params.value.toLocaleString("de-DE"),
-    },
+    // {
+    //   field: "vaccinated",
+    //   headerName: "Vaccine Đã Tiêm",
+    //   align: "center",
+    //   flex: 1,
+    //   renderCell: (params) => params.value.toLocaleString("de-DE"),
+    // },
     {
       field: "id",
       headerName: "Vaccine Hiện Có",

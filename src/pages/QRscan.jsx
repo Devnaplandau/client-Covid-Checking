@@ -165,11 +165,16 @@ const UserVaccinated = ({ vaccinatedList }) => {
       renderCell: (params) => params.value.name,
     },
     {
-      field: "createAt",
+      field: "createdAt",
       headerName: "Ngày Tiêm Tiêm",
       flex: 1,
-      renderCell: (params) =>
-        moment(params.value).format("DD/MM/YYYY HH:mm:ss"),
+      renderCell: (params) => moment(params.value).format("DD/MM/YYYY"),
+    },
+    {
+      field: "",
+      headerName: "Giờ Tiêm Tiêm",
+      flex: 1,
+      renderCell: (params) => moment(params.row.createdAt).format("HH:mm:ss"),
     },
   ];
 

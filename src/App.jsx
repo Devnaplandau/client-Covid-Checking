@@ -19,12 +19,17 @@ import {
   PlaceCreate,
   EditPlace,
   UserCheck,
+  LoginPartner,
+  Partner,
+  PartnerCreate,
+  PartnerEdit,
 } from "./pages";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="login" element={<Login />} />
+        <Route path="login/partner" element={<LoginPartner />} />
+        <Route path="login/admin" element={<Login />} />
         <Route path="" element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/user" element={<User />} />
@@ -39,8 +44,13 @@ function App() {
           <Route path="/placeroom" element={<PlaceRoom />} />
           <Route path="/place/create" element={<PlaceCreate />} />
           <Route path="/place/edit/:id" element={<EditPlace />} />
+          <Route path="/partner/admin" element={<Partner />} />
+          <Route path="/partner/admin/create" element={<PartnerCreate />} />
+          <Route path="/partner/admin/edit/:id" element={<PartnerEdit />} />
         </Route>
       </Routes>
+      {/* <Route path="/partner" element={<AppLayoutPartner />} /> */}
+      {/* <Route path="/partner" element={<AppLayoutPartner />}></Route> */}
     </BrowserRouter>
   );
 }

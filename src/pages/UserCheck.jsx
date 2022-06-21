@@ -1,35 +1,36 @@
-import {
-  Button,
-  Box,
-  Typography,
-  Paper,
-  Input,
-  TextField,
-  Grid,
-  InputAdornment,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { PageHeader } from "../components";
-import { Link } from "react-router-dom";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import OtherHousesOutlinedIcon from "@mui/icons-material/OtherHousesOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SystemUpdateAltOutlinedIcon from "@mui/icons-material/SystemUpdateAltOutlined";
+import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
+import { Box, Button, InputAdornment, Paper, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { PageHeader } from "../components";
 // import placeApi from "../api/placeApi";
-import useApi from "../api/userApi";
 import { DataGrid } from "@mui/x-data-grid";
 import moment from "moment";
-import { LoadingButton } from "@mui/lab";
 import * as XLSX from "xlsx";
+import useApi from "../api/userApi";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { LoadingButton } from "@mui/lab";
+import Grid from "@mui/material/Grid";
+// import ReactDatePicker from "react-datepicker";
 
+import "react-datepicker/dist/react-datepicker.css";
+
+// -------------------------------------
 const UserCheck = () => {
   const [userList, setUserList] = useState();
   const [pageSize, setPageSize] = useState(9);
   const [dataUser, setDataUser] = useState("");
   const [dataPlace, setDataPlace] = useState("");
   const [dataDate, setDataDate] = useState("");
+  const [timeStart, setTimeStart] = useState("");
+  const [timeEnd, setTimeEnd] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getPlace = async () => {
@@ -93,7 +94,7 @@ const UserCheck = () => {
       renderCell: (params) => moment(params.row.createdAt).format("DD/MM/YYYY"),
     },
     {
-      field: "",
+      field: "ok",
       headerName: "Giờ Khai Báo",
       flex: 1,
       align: "center",
@@ -113,50 +114,159 @@ const UserCheck = () => {
 
   // tìm kiếm dữ liệu và lọc
   const filterData = async (value) => {
-    console.log(value.user);
-    console.log(value.place);
-    console.log(value.date);
-    const req = await useApi.getPlaceUser();
-    const filter = req.filter((item) => {
-      const infoUser = item.userS.map((user) => {
-        return user.fullName.toLowerCase();
-      });
-      // moment(item.createdAt).format("DD/MM/YYYY");
+    console.log(value);
+    const kqFilter = [];
+    const nameInfo = value.user.length;
+    const placeInfo = value.place.length;
+    const dateInfo = value.date.length;
+    const timeStartInfo = value.timeStart.length;
+    const timeEndInfo = value.timeEnd.length;
+    // console.log(value.user);
+    // console.log(value.place);
+    // console.log(value.date);
 
-      return value.user.length > 1 &&
-        value.place.length > 1 &&
-        value.date.length > 1
-        ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+    const req = await useApi.getPlaceUser();
+
+    if (timeStartInfo > 1 && timeEndInfo > 1) {
+      const kq = req.filter((itemTime) => {
+        const setTimeCover = moment(itemTime.createdAt).format("HH:mm:ss");
+
+        return setTimeCover >= value.timeStart && setTimeCover <= value.timeEnd;
+      });
+      const filter = kq.filter((item) => {
+        const setTimeCover = moment(item.createdAt).format("HH:mm:ss");
+        const setDateCover = moment(item.createdAt).format("DD/MM/YYYY");
+
+        const infoUser = item.userS.map((user) => {
+          return user.fullName.toLowerCase().trim();
+        });
+
+        return nameInfo > 1 &&
+          placeInfo > 1 &&
+          dateInfo > 1 &&
+          timeStartInfo > 1 &&
+          timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+              infoUser[0] == value.user.toLowerCase() &&
+              setDateCover == value.date
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase()
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setDateCover == value.date
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? setDateCover == value.date
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? infoUser[0] == value.user.toLowerCase()
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase()
+          : setTimeCover >= value.timeStart && setTimeCover <= value.timeEnd;
+      });
+      setUserList(filter);
+      alert("filter đày đủ time");
+    } else {
+      const filter = req.filter((item) => {
+        const setTimeCover = moment(item.createdAt).format("HH:mm:ss");
+        const setDateCover = moment(item.createdAt).format("DD/MM/YYYY");
+
+        const infoUser = item.userS.map((user) => {
+          return user.fullName.toLowerCase().trim();
+        });
+        return nameInfo > 1 &&
+          placeInfo > 1 &&
+          dateInfo > 1 &&
+          timeStartInfo > 1 &&
+          timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+              infoUser[0] == value.user.toLowerCase() &&
+              setDateCover == value.date &&
+              setTimeCover >= value.timeStart
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
             infoUser[0] == value.user.toLowerCase() &&
-            moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        : value.date.length == 0 &&
-          value.place.length == 0 &&
-          value.user.length > 1
-        ? infoUser[0] == value.user.toLowerCase()
-        : value.date.length == 0 &&
-          value.place.length > 1 &&
-          value.user.length == 0
-        ? item.place.name.toLowerCase() == value.place.toLowerCase()
-        : value.date.length > 1 &&
-          value.place.length == 0 &&
-          value.user.length == 0
-        ? moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        : value.date.length == 0 &&
-          value.place.length > 1 &&
-          value.user.length > 1
-        ? infoUser[0] == value.user.toLowerCase() &&
-          moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        : value.date.length > 1 &&
-          value.place.length > 1 &&
-          value.user.length == 0
-        ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
-          moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        : item.place.name.toLowerCase() == value.place.toLowerCase() &&
-          moment(item.createdAt).format("DD/MM/YYYY") == value.date;
-      //  xử lí các trường hợp còn lại nhập thiếu 1, 2, 3 ô
-    });
-    console.log(filter);
-    setUserList(filter);
+            setDateCover == value.date &&
+            setTimeCover <= value.timeEnd
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date
+          : item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date;
+
+        //   // return setTimeCover >= value.timeStart;
+        //   // return value.user.length > 1 &&
+        //   //   value.place.length > 1 &&
+        //   //   value.date.length > 1
+        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+        //   //       infoUser[0] == value.user.toLowerCase() &&
+        //   //       moment(item.createdAt).format("DD/MM/YYYY") == value.date
+        //   //   : value.date.length == 0 &&
+        //   //     value.place.length == 0 &&
+        //   //     value.user.length > 1
+        //   //   ? infoUser[0] == value.user.toLowerCase()
+        //   //   : value.date.length == 0 &&
+        //   //     value.place.length > 1 &&
+        //   //     value.user.length == 0
+        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase()
+        //   //   : value.date.length > 1 &&
+        //   //     value.place.length == 0 &&
+        //   //     value.user.length == 0
+        //   //   ? moment(item.createdAt).format("DD/MM/YYYY") == value.date
+        //   //   : value.date.length == 0 &&
+        //   //     value.place.length > 1 &&
+        //   //     value.user.length > 1
+        //   //   ? infoUser[0] == value.user.toLowerCase() &&
+        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date
+        //   //   : value.date.length > 1 &&
+        //   //     value.place.length > 1 &&
+        //   //     value.user.length == 0
+        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date
+        //   //   : item.place.name.toLowerCase() == value.place.toLowerCase() &&
+        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date;
+        //   //  xử lí các trường hợp còn lại nhập thiếu 1, 2, 3 ô
+      });
+      setUserList(filter);
+      alert("fitler thiếu giờ");
+    }
+    setIsLoading(false);
   };
   //  xuất file excel
   const handleOnExport = () => {
@@ -191,9 +301,14 @@ const UserCheck = () => {
     const params = {
       user: dataUser,
       place: dataPlace,
-      date: dataDate,
+      date: dataDate.length == 0 ? "" : moment(dataDate).format("DD/MM/YYYY"),
+      timeStart: timeStart,
+      timeEnd: timeEnd,
+      // time: moment(dataDate).format("HH:ss:mm"),
     };
+
     filterData(params);
+    setIsLoading(true);
   };
   //  xóa bỏ dữ liệu vào load lại toàn bộ dữ liệu
   const clearData = async () => {
@@ -202,6 +317,8 @@ const UserCheck = () => {
     setDataUser("");
     setDataPlace("");
     setDataDate("");
+    setTimeStart("");
+    setTimeEnd("");
   };
 
   return (
@@ -209,12 +326,13 @@ const UserCheck = () => {
       <PageHeader title="Truy Vấn Khai Báo Tiêm Chủng" />
       <Box
         sx={{
-          width: 460,
-          height: 54,
+          width: "80%",
+          height: 340,
           margin: 3,
-          mb: 30,
-          // backgroundColor: "#fff",
-          borderRadius: "4px",
+          mb: 14,
+          p: 5,
+          backgroundColor: "#fff",
+          borderRadius: "10px",
         }}
       >
         <TextField
@@ -259,6 +377,7 @@ const UserCheck = () => {
           label="Ngày Khai Báo"
           color="primary"
           fullWidth
+          type="date"
           variant="outlined"
           placeholder="Nhập từ khóa muốn tìm kiếm . . ."
           sx={{
@@ -267,18 +386,66 @@ const UserCheck = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <AccessTimeOutlinedIcon />
+                <DateRangeOutlinedIcon />
               </InputAdornment>
             ),
           }}
           value={dataDate}
           onChange={(e) => handleDataDate(e.target.value)}
         />
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              label="Giờ Bắt Đầu"
+              color="primary"
+              fullWidth
+              type="time"
+              variant="outlined"
+              placeholder="Nhập từ khóa muốn tìm kiếm . . ."
+              sx={{
+                mb: 2,
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccessTimeOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
+              value={timeStart}
+              onChange={(e) => setTimeStart(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Giờ Kết Thúc"
+              color="primary"
+              fullWidth
+              type="time"
+              variant="outlined"
+              placeholder="Nhập từ khóa muốn tìm kiếm . . ."
+              sx={{
+                mb: 2,
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccessTimeOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
+              value={timeEnd}
+              onChange={(e) => setTimeEnd(e.target.value)}
+            />
+          </Grid>
+        </Grid>
+
         <LoadingButton
           endIcon={<SearchOutlinedIcon />}
           variant="contained"
           size="medium"
-          sx={{ height: 54, ml: 5, width: 180, mb: 5 }}
+          loading={isLoading}
+          sx={{ height: 54, ml: 5, width: 180, mb: 5, mt: 4 }}
           onClick={() => sendData()}
         >
           Tìm Kiếm
@@ -287,12 +454,13 @@ const UserCheck = () => {
           endIcon={<RestartAltOutlinedIcon />}
           variant="contained"
           size="medium"
-          sx={{ height: 54, ml: 2, width: 180, mb: 5 }}
+          sx={{ height: 54, ml: 2, width: 180, mb: 5, mt: 4 }}
           onClick={() => clearData()}
         >
           Làm Mới
         </Button>
       </Box>
+      {/* ------------------------ */}
       <PageHeader title="Bảng Truy Vấn Tiêm Chủng" />
       <Button
         endIcon={<SystemUpdateAltOutlinedIcon />}
