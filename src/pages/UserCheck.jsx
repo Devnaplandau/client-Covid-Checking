@@ -226,42 +226,148 @@ const UserCheck = () => {
           ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
             infoUser[0] == value.user.toLowerCase() &&
             setDateCover == value.date
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase()
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? infoUser[0] == value.user.toLowerCase()
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase() &&
+            setTimeCover <= value.timeEnd
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date &&
+            setTimeCover <= value.timeEnd
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date &&
+            setTimeCover >= value.timeStart
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setTimeCover <= value.timeEnd &&
+            setDateCover == value.date
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setTimeCover >= value.timeStart &&
+            setDateCover == value.date
+          : nameInfo > 1 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            infoUser[0] == value.user.toLowerCase() &&
+            setTimeCover >= value.timeStart
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setTimeCover <= value.timeEnd
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setDateCover == value.date
+          : nameInfo > 1 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? infoUser[0] == value.user.toLowerCase() &&
+            setTimeCover >= value.timeStart
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setTimeCover <= value.timeEnd
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setDateCover == value.date
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
+            setTimeCover >= value.timeStart
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? setDateCover == value.date && setTimeCover >= value.timeStart
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? setDateCover == value.date && setTimeCover <= value.timeEnd
+          : nameInfo == 0 &&
+            placeInfo > 1 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? item.place.name.toLowerCase() == value.place.toLowerCase()
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo > 1 &&
+            timeStartInfo == 0 &&
+            timeEndInfo == 0
+          ? setDateCover == value.date
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo > 1 &&
+            timeEndInfo == 0
+          ? setTimeCover >= value.timeStart
+          : nameInfo == 0 &&
+            placeInfo == 0 &&
+            dateInfo == 0 &&
+            timeStartInfo == 0 &&
+            timeEndInfo > 1
+          ? setTimeCover <= value.timeEnd
           : item.place.name.toLowerCase() == value.place.toLowerCase() &&
             infoUser[0] == value.user.toLowerCase() &&
             setDateCover == value.date;
-
-        //   // return setTimeCover >= value.timeStart;
-        //   // return value.user.length > 1 &&
-        //   //   value.place.length > 1 &&
-        //   //   value.date.length > 1
-        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
-        //   //       infoUser[0] == value.user.toLowerCase() &&
-        //   //       moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        //   //   : value.date.length == 0 &&
-        //   //     value.place.length == 0 &&
-        //   //     value.user.length > 1
-        //   //   ? infoUser[0] == value.user.toLowerCase()
-        //   //   : value.date.length == 0 &&
-        //   //     value.place.length > 1 &&
-        //   //     value.user.length == 0
-        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase()
-        //   //   : value.date.length > 1 &&
-        //   //     value.place.length == 0 &&
-        //   //     value.user.length == 0
-        //   //   ? moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        //   //   : value.date.length == 0 &&
-        //   //     value.place.length > 1 &&
-        //   //     value.user.length > 1
-        //   //   ? infoUser[0] == value.user.toLowerCase() &&
-        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        //   //   : value.date.length > 1 &&
-        //   //     value.place.length > 1 &&
-        //   //     value.user.length == 0
-        //   //   ? item.place.name.toLowerCase() == value.place.toLowerCase() &&
-        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date
-        //   //   : item.place.name.toLowerCase() == value.place.toLowerCase() &&
-        //   //     moment(item.createdAt).format("DD/MM/YYYY") == value.date;
-        //   //  xử lí các trường hợp còn lại nhập thiếu 1, 2, 3 ô
       });
       setUserList(filter);
       alert("fitler thiếu giờ");
