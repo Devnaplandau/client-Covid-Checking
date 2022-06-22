@@ -5,8 +5,16 @@ import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SystemUpdateAltOutlinedIcon from "@mui/icons-material/SystemUpdateAltOutlined";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
-import { Box, Button, InputAdornment, Paper, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+  Checkbox,
+  Paper,
+  Radio,
+} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../components";
 // import placeApi from "../api/placeApi";
 import { DataGrid } from "@mui/x-data-grid";
@@ -17,9 +25,10 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
 import Grid from "@mui/material/Grid";
+import FormControlLabel from "@mui/material/FormControlLabel";
 // import ReactDatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
+import { useTable } from "react-table";
 
 // -------------------------------------
 const UserCheck = () => {
@@ -90,6 +99,7 @@ const UserCheck = () => {
       field: "createdAt",
       headerName: "Ngày Khai Báo",
       flex: 1,
+
       align: "center",
       renderCell: (params) => moment(params.row.createdAt).format("DD/MM/YYYY"),
     },
@@ -98,10 +108,47 @@ const UserCheck = () => {
       headerName: "Giờ Khai Báo",
       flex: 1,
       align: "center",
+
       renderCell: (params) => moment(params.row.createdAt).format("HH:mm:ss"),
+    },
+    {
+      field: "alert",
+      headerName: "Đánh Dấu",
+      flex: 1,
+      align: "center",
+      renderCell: (params) => (
+        <Checkbox
+          // checked={params.row.dateCheck ? true : false}
+          onChange={(e) =>
+            handleGetValueCheckBox(
+              `${e.target.checked}|${params.row.userS.map((value) => {
+                return value.id;
+              })}`,
+              e
+            )
+          }
+          // value={params.row.userS.map((value) => {
+          //   return value.alert;
+          // })}
+        >
+          Click
+        </Checkbox>
+      ),
+    },
+    {
+      field: "dateCheck",
+      headerName: "Thời Gian Đánh Dấu",
+      flex: 1,
+      align: "center",
+      renderCell: (params) => {
+        return params.row.userS.map((value) => {
+          return value.dateCheck ? value.dateCheck : "chưa có";
+        });
+      },
     },
   ];
 
+  // console.log(moment()._d.format("HH:mm:ss"));
   const handleDataUser = async (value) => {
     setDataUser(value);
   };
@@ -127,6 +174,7 @@ const UserCheck = () => {
 
     const req = await useApi.getPlaceUser();
 
+    // xử lí thời gian khi tìm kiếm
     if (timeStartInfo > 1 && timeEndInfo > 1) {
       const kq = req.filter((itemTime) => {
         const setTimeCover = moment(itemTime.createdAt).format("HH:mm:ss");
@@ -374,6 +422,7 @@ const UserCheck = () => {
     }
     setIsLoading(false);
   };
+  // ------------------------------------
   //  xuất file excel
   const handleOnExport = () => {
     const req = userList;
@@ -388,7 +437,8 @@ const UserCheck = () => {
           "Tên Địa Điểm": item.place.address, // address place
           "Khu Vực": item.place.name, // name place
           "Ngày Khai Báo": moment(item.createdAt).format("DD/MM/YYYY"),
-          "Thời Gian Khai Báo": moment(item.createdAt).format("HH:ss:mm"),
+          "Thời Gian Khai Báo": moment(item.createdAt).format("HH:mm:ss"),
+          "Thời Gian Đánh Dấu": moment(item.dateCheck).format("HH:mm:ss"),
         };
 
         return params;
@@ -426,6 +476,48 @@ const UserCheck = () => {
     setTimeStart("");
     setTimeEnd("");
   };
+
+  const handleGetValueCheckBox = async (value, e) => {
+    // setCheckBox(e.target.checked);
+    sendDateCheck(value);
+  };
+
+  const sendDateCheck = async (value) => {
+    // console.log(value);
+    const setChecked = value.includes("true");
+    console.log(value.indexOf("|"));
+    if (setChecked == true) {
+      const sliceId = value.substr(value.indexOf("|") + 1);
+      const TimeSet = moment().format("HH:mm:ss");
+      const params = {
+        alert: setChecked,
+        dateCheck: TimeSet,
+      };
+      try {
+        const res = await useApi.update(sliceId, params);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      const setIsChecked = false;
+      const setTime = "";
+
+      const sliceId = value.substr(value.indexOf("|") + 1);
+      const params = {
+        alert: setIsChecked,
+        dateCheck: setTime,
+      };
+      try {
+        const res = await useApi.update(sliceId, params);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  //  xử lí table
 
   return (
     <>
@@ -567,6 +659,7 @@ const UserCheck = () => {
         </Button>
       </Box>
       {/* ------------------------ */}
+
       <PageHeader title="Bảng Truy Vấn Tiêm Chủng" />
       <Button
         endIcon={<SystemUpdateAltOutlinedIcon />}
@@ -589,6 +682,8 @@ const UserCheck = () => {
           disableSelectionOnClick
         />
       </Paper>
+
+      {/* render = table thuần */}
     </>
   );
 };

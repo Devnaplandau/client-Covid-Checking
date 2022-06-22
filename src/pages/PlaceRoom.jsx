@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import placeApi from "../api/placeApi";
 import { PageHeader } from "../components";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { LoadingButton } from "@mui/lab";
 
 const PlaceRoom = () => {
   const [placeList, setPlaceList] = useState([]);
@@ -86,7 +87,7 @@ const PlaceRoom = () => {
             color="error"
             disableElevation
             endIcon={<DeleteOutlinedIcon />}
-            loading={onDelete}
+            loading={onDelete} // do button không có attribute loading
             onClick={() => deleteLot(params.row.id)}
           >
             Xóa

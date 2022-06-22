@@ -33,6 +33,10 @@ const UserCreate = () => {
   const [dialogType, setDialogType] = useState("");
   const [dialogText, setDialogText] = useState("");
 
+  //  chú ý cho nhuật ngày mai
+  const [alert, setAlert] = useState(false);
+  const [dateCheck, setDateCheck] = useState("");
+
   const createUser = async () => {
     console.log("create user");
     if (onSubmit) return;
@@ -52,6 +56,8 @@ const UserCreate = () => {
       fullName: name,
       idNumber: idCard,
       address: address.name,
+      alert: alert,
+      dateCheck: dateCheck,
     };
 
     try {

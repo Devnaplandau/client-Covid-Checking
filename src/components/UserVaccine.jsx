@@ -32,7 +32,7 @@ const UserVaccine = ({ user }) => {
     const getVaccines = async () => {
       try {
         const res = await vaccineApi.getAll();
-        console.log(res);
+        // console.log(res);
         setVaccineList(res);
       } catch (err) {
         console.log(err);
@@ -50,7 +50,7 @@ const UserVaccine = ({ user }) => {
     setVaccineLots(selectedVaccine.vaccineLots);
   }, [selectedVaccine]);
 
-  console.log(userVaccines);
+  // console.log(userVaccines);
   const tableHeader = [
     {
       field: "vaccine",

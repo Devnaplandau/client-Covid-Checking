@@ -178,7 +178,7 @@ const VaccineDetail = () => {
             }}
             padding="4px 10px"
           >
-            <Grid item xs={0} fullWidth>
+            <Grid item xs={0}>
               {vaccine && (
                 <VaccineLots
                   vaccine={vaccine}

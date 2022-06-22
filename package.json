@@ -31,6 +31,7 @@
     "react-qr-reader": "^2.2.1",
     "react-qrcode-logo": "^2.7.0",
     "react-router-dom": "^6.1.1",
+    "react-table": "^7.8.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

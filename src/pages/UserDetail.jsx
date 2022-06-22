@@ -131,7 +131,7 @@ const UserDetail = () => {
                     size={300}
                     level="H"
                     includeMargin={true}
-                    crossorigin="anonymous"
+                    // crossorigin="anonymous"
                     imageSettings={{
                       src: `${tdLogo}`,
                       excavate: true,
