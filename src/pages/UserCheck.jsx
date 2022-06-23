@@ -13,6 +13,7 @@ import {
   Checkbox,
   Paper,
   Radio,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components";
@@ -25,7 +26,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
 import Grid from "@mui/material/Grid";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { CustomDialog } from "../components";
 // import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -42,6 +43,9 @@ const UserCheck = () => {
 
   const [timeAlert, setTimeAlert] = useState("");
   // const [delUserCheck, setDelUserCheck] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState("");
+  const [dialogText, setDialogText] = useState("");
 
   useEffect(() => {
     const getPlace = async () => {
@@ -442,6 +446,7 @@ const UserCheck = () => {
     sendDateCheck(value);
   };
 
+  // xử lí check
   const sendDateCheck = async (value) => {
     console.log(value);
     // console.log(value);
@@ -497,21 +502,51 @@ const UserCheck = () => {
   };
 
   const handleDelCheck = (res) => {
+    const arr = [];
     // const a = moment("24/06/2022", "DD/MM/YYYY")
     //   .add(timeAlert, "days")
     //   .format("DD/MM/YYYY");
     // console.log(a);
     // console.log(res);
-    const filter = res.map((itemPlace) =>
-      itemPlace.userS.filter((itemUser) => {
+    const filter = res.map((itemPlace) => {
+      const valueCheck = itemPlace.userS.filter((itemUser) => {
         return (
           moment(moment(itemUser.dateCheck).format("DD/MM/YYYY"), "DD/MM/YYYY")
             .add(timeAlert, "days")
             .format("DD/MM/YYYY") == moment().format("DD/MM/YYYY")
         );
-      })
-    );
-    console.log(filter);
+      });
+      arr.push(...valueCheck);
+    });
+    handReUpdateCheck(arr);
+  };
+  // handle gỡ check if  time alert + time input == time.now()
+  const handReUpdateCheck = async (valueFilter) => {
+    if (valueFilter.length == 0) {
+      setDialogText("Đã Lọc Dữ Liệu !");
+      setDialogOpen(true);
+      setDialogType("success");
+    }
+    for (let item of valueFilter) {
+      const setIsChecked = false;
+      const setTime = "";
+      const params = {
+        alert: setIsChecked,
+        dateCheck: setTime,
+      };
+      try {
+        const res = await useApi.update(item.id, params);
+        console.log(res);
+        setDialogText("Đã Lọc Dữ Liệu !");
+        setDialogOpen(true);
+        setDialogType("success");
+      } catch (err) {
+        setDialogText(err.response.data);
+        setDialogOpen(true);
+        setDialogType("error");
+        console.log(err);
+      }
+    }
   };
   return (
     <>
@@ -683,7 +718,7 @@ const UserCheck = () => {
             type="text"
             variant="outlined"
             onChange={(e) => setTimeAlert(e.target.value)}
-            placeholder="Nhập từ khóa muốn tìm kiếm . . ."
+            placeholder="Nhập số ngày ..."
           />
           <Button
             endIcon={<RestartAltOutlinedIcon />}
@@ -756,6 +791,23 @@ const UserCheck = () => {
           </tbody>
         </table>
       </div>
+      <CustomDialog
+        open={dialogOpen}
+        type={dialogType}
+        showIcon
+        content={
+          <Typography variant="subtitle1" textAlign="center">
+            {dialogText}
+          </Typography>
+        }
+        actions={
+          <Box width="100%" sx={{ display: "flex", justifyContent: "center" }}>
+            <Button variant="contained" onClick={() => setDialogOpen(false)}>
+              Ok
+            </Button>
+          </Box>
+        }
+      />
     </>
   );
 };
