@@ -14,7 +14,7 @@ import {
   Paper,
   Radio,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { PageHeader } from "../components";
 // import placeApi from "../api/placeApi";
 import { DataGrid } from "@mui/x-data-grid";
@@ -29,6 +29,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 // import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTable } from "react-table";
+import { render } from "react-dom";
 
 // -------------------------------------
 const UserCheck = () => {
@@ -40,12 +41,12 @@ const UserCheck = () => {
   const [timeStart, setTimeStart] = useState("");
   const [timeEnd, setTimeEnd] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [check, setCheck] = useState();
   useEffect(() => {
     const getPlace = async () => {
       try {
         const res = await useApi.getPlaceUser();
-        // console.log(res);
+        console.log(res);
         setUserList(res);
       } catch (err) {
         console.log(err);
@@ -55,85 +56,80 @@ const UserCheck = () => {
   }, []);
 
   const tableHeader = [
-    // {
-    //   field: "fullName",
-    //   headerName: "Tên Người Khai Báo",
-    //   width: 220,
-    //   renderCell: (params) => userList.userVisitLast24h.user.fullName,
-    // },
     {
+      id: 0,
       field: "fullName",
       headerName: "Tên Người Khai Báo",
-      flex: 1,
-      renderCell: (params) => {
-        return params.row.userS.map((value) => {
-          return value.fullName;
-        });
-      },
+      // flex: 1,
+      // renderCell: (params) => {
+      //   return params.row.userS.map((value) => {
+      //     return value.fullName;
+      //   });
+      // },
     },
     {
+      id: 1,
       field: "id",
       headerName: "Địa Chỉ",
-      flex: 1,
-      renderCell: (params) => {
-        return params.row.userS.map((value) => {
-          return value.address;
-        });
-      },
+      // flex: 1,
+      // renderCell: (params) => {
+      //   return params.row.userS.map((value) => {
+      //     return value.address;
+      //   });
+      // },
     },
     {
+      id: 2,
       field: "name",
       headerName: "Tên Địa Điểm",
-      flex: 1,
+      // flex: 1,
 
-      renderCell: (params) => params.row.place.name,
+      // renderCell: (params) => params.row.place.name,
     },
     {
+      id: 3,
       field: "address",
       headerName: "Khu Vực",
-      flex: 1,
-      renderCell: (params) => params.row.place.address,
+      // flex: 1,
+      // renderCell: (params) => params.row.place.address,
     },
 
     {
+      id: 4,
       field: "createdAt",
       headerName: "Ngày Khai Báo",
-      flex: 1,
-
-      align: "center",
-      renderCell: (params) => moment(params.row.createdAt).format("DD/MM/YYYY"),
+      // flex: 1,
+      // align: "center",
+      // renderCell: (params) => moment(params.row.createdAt).format("DD/MM/YYYY"),
     },
     {
+      id: 5,
       field: "ok",
       headerName: "Giờ Khai Báo",
-      flex: 1,
-      align: "center",
+      // flex: 1,
+      // align: "center",
 
-      renderCell: (params) => moment(params.row.createdAt).format("HH:mm:ss"),
+      // renderCell: (params) => moment(params.row.createdAt).format("HH:mm:ss"),
     },
     {
+      id: 6,
       field: "alert",
       headerName: "Đánh Dấu",
-      flex: 1,
-      align: "center",
-      renderCell: (params) => (
-        <Checkbox
-          // checked={params.row.dateCheck ? true : false}
-          onChange={(e) =>
-            handleGetValueCheckBox(
-              `${e.target.checked}|${params.row.userS.map((value) => {
-                return value.id;
-              })}`,
-              e
-            )
-          }
-          // value={params.row.userS.map((value) => {
-          //   return value.alert;
-          // })}
-        >
-          Click
-        </Checkbox>
-      ),
+      // flex: 1,
+      // align: "center",
+      // renderCell: (params) => (
+      //   <Checkbox
+      //   // checked={false}
+      //   // onChange={(e) =>
+      //   //   handleGetValueCheckBox(
+      //   //     `${e.target.checked}|${params.row.userS.map((value) => {
+      //   //       return value.id;
+      //   //     })}`,
+      //   //     e
+      //   //   )
+      //   // }
+      //   ></Checkbox>
+      // ),
     },
     {
       field: "dateCheck",
@@ -438,7 +434,7 @@ const UserCheck = () => {
           "Khu Vực": item.place.name, // name place
           "Ngày Khai Báo": moment(item.createdAt).format("DD/MM/YYYY"),
           "Thời Gian Khai Báo": moment(item.createdAt).format("HH:mm:ss"),
-          "Thời Gian Đánh Dấu": moment(item.dateCheck).format("HH:mm:ss"),
+          "Thời Gian Đánh Dấu": user.dateCheck,
         };
 
         return params;
@@ -477,47 +473,64 @@ const UserCheck = () => {
     setTimeEnd("");
   };
 
-  const handleGetValueCheckBox = async (value, e) => {
-    // setCheckBox(e.target.checked);
-    sendDateCheck(value);
-  };
+  // const handleGetValueCheckBox = async (value, e) => {
+  //   console.log(e);
 
-  const sendDateCheck = async (value) => {
-    // console.log(value);
-    const setChecked = value.includes("true");
-    console.log(value.indexOf("|"));
-    if (setChecked == true) {
-      const sliceId = value.substr(value.indexOf("|") + 1);
-      const TimeSet = moment().format("HH:mm:ss");
-      const params = {
-        alert: setChecked,
-        dateCheck: TimeSet,
-      };
-      try {
-        const res = await useApi.update(sliceId, params);
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      const setIsChecked = false;
-      const setTime = "";
+  //   setCheckBox(e.target.checked);
+  //   sendDateCheck(value);
+  // };
 
-      const sliceId = value.substr(value.indexOf("|") + 1);
-      const params = {
-        alert: setIsChecked,
-        dateCheck: setTime,
-      };
-      try {
-        const res = await useApi.update(sliceId, params);
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
+  // const sendDateCheck = async (value) => {
+  //   console.log(value);
+  //   // console.log(value);
+  //   const setChecked = value.includes("true");
+  //   console.log(value.indexOf("|"));
+  //   if (setChecked == true) {
+  //     const sliceId = value.substr(value.indexOf("|") + 1);
+  //     const TimeSet = moment().format("HH:mm:ss");
+  //     const params = {
+  //       alert: setChecked,
+  //       dateCheck: TimeSet,
+  //     };
+  //     try {
+  //       const res = await useApi.update(sliceId, params);
+  //       console.log(res);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   } else {
+  //     const setIsChecked = false;
+  //     const setTime = "";
+
+  //     const sliceId = value.substr(value.indexOf("|") + 1);
+  //     const params = {
+  //       alert: setIsChecked,
+  //       dateCheck: setTime,
+  //     };
+  //     try {
+  //       const res = await useApi.update(sliceId, params);
+  //       console.log(res);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // };
 
   //  xử lí table
+  // let tbody = userList.map((item) => {
+  //   return (
+  //     <td>{item.userS.map((itemUser)=> itemUser.fullName)}</td>
+  //     <td>{item.userS.map((itemUser)=> itemUser.address)}</td>
+  //     <td>{item.place.name}</td>
+  //     <td>{item.place.address}</td>
+  //     <td>{moment(item.createdAt).format("DD/MM/YYYY")}</td>
+  //     <td>{moment(item.createdAt).format("HH:mm:ss")}</td>
+  //   )
+  // })
+  // const setValue = userList.map((element) => {
+  //   return element;
+  // });
+  // console.log(setValue);
 
   return (
     <>
@@ -527,7 +540,7 @@ const UserCheck = () => {
           width: "80%",
           height: 340,
           margin: 3,
-          mb: 14,
+          mb: 16,
           p: 5,
           backgroundColor: "#fff",
           borderRadius: "10px",
@@ -661,16 +674,47 @@ const UserCheck = () => {
       {/* ------------------------ */}
 
       <PageHeader title="Bảng Truy Vấn Tiêm Chủng" />
-      <Button
-        endIcon={<SystemUpdateAltOutlinedIcon />}
-        variant="contained"
-        size="medium"
-        sx={{ height: 54, ml: 5, width: 180, mb: 2 }}
-        onClick={() => handleOnExport()}
-      >
-        Xuất File Excel
-      </Button>
-      <Paper elevation={0}>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Button
+            endIcon={<SystemUpdateAltOutlinedIcon />}
+            variant="contained"
+            size="medium"
+            sx={{ height: 54, ml: 5, width: 180, mb: 2 }}
+            onClick={() => handleOnExport()}
+          >
+            Xuất File Excel
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            sx={{
+              height: 54,
+              ml: 5,
+              width: 280,
+              mb: 2,
+              backgroundColor: "#fff",
+              borderRadius: "10px",
+            }}
+            fullWidth
+            label="Số Ngày Tự Chăm Sóc"
+            color="primary"
+            type="text"
+            variant="outlined"
+            placeholder="Nhập từ khóa muốn tìm kiếm . . ."
+          />
+          <Button
+            endIcon={<RestartAltOutlinedIcon />}
+            variant="contained"
+            size="medium"
+            sx={{ height: 54, ml: 1, width: 140, mb: 2 }}
+            // onClick={() => handleOnExport()}
+          >
+            Kiểm Tra
+          </Button>
+        </Grid>
+      </Grid>
+      {/* <Paper elevation={0}>
         <DataGrid
           autoHeight
           rows={userList}
@@ -681,9 +725,50 @@ const UserCheck = () => {
           showColumnRightBorder
           disableSelectionOnClick
         />
-      </Paper>
+      </Paper> */}
 
       {/* render = table thuần */}
+
+      <div className="container">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              {tableHeader.map((item) => (
+                <th key={item.id} scope="col">
+                  {item.headerName}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {userList &&
+              userList.map((item) => (
+                <tr key={item.id}>
+                  <td scope="row">
+                    {item.userS.map((itemUser) => itemUser.fullName)}
+                  </td>
+                  <td scope="row">
+                    {item.userS.map((itemUser) => itemUser.address)}
+                  </td>
+                  <td scope="row">{item.place.name}</td>
+                  <td scope="row">{item.place.address}</td>
+                  <td scope="row">
+                    {moment(item.createdAt).format("DD/MM/YYYY")}
+                  </td>
+                  <td scope="row">
+                    {moment(item.createdAt).format("HH:mm:ss")}
+                  </td>
+                  <td>
+                    <Checkbox></Checkbox>
+                  </td>
+                  <td scope="row">
+                    {item.userS.map((itemUser) => itemUser.date)}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };
