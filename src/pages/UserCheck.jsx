@@ -99,7 +99,7 @@ const UserCheck = () => {
     },
     {
       field: "dateCheck",
-      headerName: "Thời Gian Đánh Dấu",
+      headerName: "Thời Gian Hoàn Thành Cách Ly",
       flex: 1,
       align: "center",
       renderCell: (params) => {
@@ -697,7 +697,14 @@ const UserCheck = () => {
       </Box>
       {/* ------------------------ */}
 
-      <PageHeader title="Bảng Truy Vấn Tiêm Chủng" />
+      <PageHeader
+        title="Bảng Truy Vấn Tiêm Chủng"
+        // rightContent={
+        //   <Typography variant="h6" component="h2">
+        //     Kiểm Tra
+        //   </Typography>
+        // }
+      />
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Button
@@ -715,7 +722,7 @@ const UserCheck = () => {
             sx={{
               height: 54,
               ml: 5,
-              width: 280,
+              width: 200,
               mb: 2,
               backgroundColor: "#fff",
               borderRadius: "10px",
@@ -733,9 +740,9 @@ const UserCheck = () => {
             variant="contained"
             size="medium"
             onClick={() => handleCheckTimeAlert()}
-            sx={{ height: 54, ml: 1, width: 140, mb: 2 }}
+            sx={{ height: 54, ml: 1, width: 128, mb: 2 }}
           >
-            Kiểm Tra
+            Cập Nhật
           </Button>
         </Grid>
       </Grid>
