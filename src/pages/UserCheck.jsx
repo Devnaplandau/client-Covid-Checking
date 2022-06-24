@@ -401,7 +401,9 @@ const UserCheck = () => {
           "Ngày Khai Báo": moment(item.createdAt).format("DD/MM/YYYY"),
           "Thời Gian Khai Báo": moment(item.createdAt).format("HH:mm:ss"),
           "Đánh Dấu": user.alert,
-          "Thời Gian Đánh Dấu": user.dateCheck,
+          "Thời Gian Đánh Dấu": user.dateCheck
+            ? moment(user.dateCheck).format("DD/MM/YYYY HH:mm:ss")
+            : "Chưa Có",
         };
 
         return params;
@@ -782,7 +784,9 @@ const UserCheck = () => {
                   <td scope="row">
                     {item.userS.map((itemUser) =>
                       itemUser.dateCheck
-                        ? moment(itemUser.dateCheck).format("HH:mm:ss")
+                        ? moment(itemUser.dateCheck).format(
+                            "DD/MM/YYYY HH:mm:ss"
+                          )
                         : "Chưa Có"
                     )}
                   </td>
