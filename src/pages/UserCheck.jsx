@@ -375,9 +375,7 @@ const UserCheck = () => {
             timeStartInfo == 0 &&
             timeEndInfo > 1
           ? setTimeCover <= value.timeEnd
-          : item.place.name.toLowerCase() == value.place.toLowerCase() &&
-            infoUser[0] == value.user.toLowerCase() &&
-            setDateCover == value.date;
+          : req;
       });
       setUserList(filter);
       alert("fitler thiếu giờ");
@@ -456,11 +454,16 @@ const UserCheck = () => {
     console.log(value.indexOf("|"));
     if (setChecked == true) {
       const sliceId = value.substr(value.indexOf("|") + 1);
-      const TimeSet = moment();
+      // const TimeSet = moment();
       const params = {
         alert: setChecked,
-        dateCheck: TimeSet,
+        dateCheck: moment().add(timeAlert, "days"),
+
+        // moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY")
+        //   .add(timeAlert, "days")
+        //   .format("DD/MM/YYYY"),
       };
+      console.log(params);
       try {
         const res = await useApi.update(sliceId, params);
         console.log(res);
@@ -513,13 +516,16 @@ const UserCheck = () => {
     const filter = res.map((itemPlace) => {
       const valueCheck = itemPlace.userS.filter((itemUser) => {
         return (
-          moment(moment(itemUser.dateCheck).format("DD/MM/YYYY"), "DD/MM/YYYY")
-            .add(timeAlert, "days")
-            .format("DD/MM/YYYY") == moment().format("DD/MM/YYYY")
+          // moment(moment(itemUser.dateCheck).format("DD/MM/YYYY"), "DD/MM/YYYY")
+          //   .add(timeAlert, "days")
+          //   .format("DD/MM/YYYY")
+          moment(itemUser.dateCheck).format("DD/MM/YYYY") ==
+          moment().format("DD/MM/YYYY")
         );
       });
       arr.push(...valueCheck);
     });
+    console.log(arr);
     handReUpdateCheck(arr);
   };
   // handle gỡ check if  time alert + time input == time.now()
@@ -728,7 +734,6 @@ const UserCheck = () => {
             size="medium"
             onClick={() => handleCheckTimeAlert()}
             sx={{ height: 54, ml: 1, width: 140, mb: 2 }}
-            // onClick={() => handleOnExport()}
           >
             Kiểm Tra
           </Button>
@@ -784,9 +789,7 @@ const UserCheck = () => {
                   <td scope="row">
                     {item.userS.map((itemUser) =>
                       itemUser.dateCheck
-                        ? moment(itemUser.dateCheck).format(
-                            "DD/MM/YYYY HH:mm:ss"
-                          )
+                        ? moment(itemUser.dateCheck).format("DD/MM/YYYY")
                         : "Chưa Có"
                     )}
                   </td>
