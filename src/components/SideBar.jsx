@@ -7,6 +7,7 @@ import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import partnerApi from "../api/partnerApi";
 
 import {
@@ -86,6 +87,12 @@ const SideBar = () => {
       path: "/qr-scan",
       icon: <QrCodeScannerOutlinedIcon />,
       display: localStorage.getItem("token") ? true : partner.permissionScan,
+    },
+    {
+      text: "Ý Kiến & Đánh Giá",
+      path: "/feedback",
+      icon: <CommentOutlinedIcon />,
+      display: true,
     },
     {
       text: "Đối Tác",

@@ -237,7 +237,7 @@ const UserInfo = ({ user, onUpdateFalse, onUpdateSuccess }) => {
           <Grid item xs={6}>
             <FormControl fullWidth margin="normal">
               <TextField
-                label="Mã"
+                label="Giới Tính"
                 variant="outlined"
                 value={idCard}
                 onChange={(e) => setIdCard(e.target.value)}

@@ -23,6 +23,7 @@ import {
   Partner,
   PartnerCreate,
   PartnerEdit,
+  FeedBack,
 } from "./pages";
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/partner/admin" element={<Partner />} />
           <Route path="/partner/admin/create" element={<PartnerCreate />} />
           <Route path="/partner/admin/edit/:id" element={<PartnerEdit />} />
+          <Route path="/feedback" element={<FeedBack />} />
         </Route>
       </Routes>
       {/* <Route path="/partner" element={<AppLayoutPartner />} /> */}

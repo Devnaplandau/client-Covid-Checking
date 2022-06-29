@@ -17,3 +17,4 @@ export { default as LoginPartner } from "./LoginPartner";
 export { default as Partner } from "./Partner";
 export { default as PartnerCreate } from "./PartnerCreate";
 export { default as PartnerEdit } from "./PartnerEdit";
+export { default as FeedBack } from "./FeedBack";
