@@ -89,14 +89,14 @@ const VaccineLot = ({ vaccine, onLotAdded, onLotDelete, onLotUpdated }) => {
             loading={onDelete}
             onClick={() => deleteLot(params.row.id)}
           >
-            Delete
+            Xóa
           </Button>
           <Button
             disableElevation
             startIcon={<ModeEditOutlineOutlinedIcon />}
             onClick={() => selectLot(params.row)}
           >
-            Edit
+            sửa
           </Button>
         </Box>
       ),

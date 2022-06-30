@@ -29,6 +29,7 @@ import Grid from "@mui/material/Grid";
 import { CustomDialog } from "../components";
 // import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
 // -------------------------------------
 const UserCheck = () => {
@@ -377,6 +378,8 @@ const UserCheck = () => {
           ? setTimeCover <= value.timeEnd
           : req;
       });
+
+      // console.log(filter);
       setUserList(filter);
       alert("fitler thiếu giờ");
     }
@@ -448,28 +451,44 @@ const UserCheck = () => {
 
   // xử lí check
   const sendDateCheck = async (value) => {
-    console.log(value);
+    // console.log(value);
     // console.log(value);
     const setChecked = value.includes("true");
     console.log(value.indexOf("|"));
     if (setChecked == true) {
       const sliceId = value.substr(value.indexOf("|") + 1);
-      // const TimeSet = moment();
+
       const params = {
         alert: setChecked,
         dateCheck: moment().add(timeAlert, "days"),
-
-        // moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY")
-        //   .add(timeAlert, "days")
-        //   .format("DD/MM/YYYY"),
       };
       console.log(params);
       try {
         const res = await useApi.update(sliceId, params);
+        // -------------------------
+        axios.defaults.baseURL = "";
+        await axios({
+          method: "post",
+          url: "https://onesignal.com/api/v1/notifications",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization:
+              "Basic N2M3Nzk2NGQtMWQ4NC00NDExLTkyODItMDc5YTJhNWJjOGZm",
+          },
+          data: {
+            app_id: "7bffda8a-cda4-422a-8019-0a42d73658c2",
+            headings: { en: "Cảnh Báo !" },
+            contents: { en: "Bạn đã tiếp xúc gần với người bị nhiễm." },
+            included_segments: ["All"],
+          },
+        });
+        // =========================
         console.log(res);
       } catch (err) {
         console.log(err);
       }
+
+      // gửi thông báo đến app
     } else {
       const setIsChecked = false;
       const setTime = "";
@@ -481,7 +500,7 @@ const UserCheck = () => {
       };
       try {
         const res = await useApi.update(sliceId, params);
-        console.log(res);
+        // console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -490,11 +509,19 @@ const UserCheck = () => {
 
   // handle check by An
   const handleCheck = (item) => {
-    // console.log(item);
-    const a = item.userS.map((itemUser) => {
-      return itemUser.alert;
-    });
-    return a[0];
+    // console.log(item.length);
+    // if (item.length <= 1) {
+    for (let itemValue of item.userS) {
+      return itemValue.alert;
+      // console.log(a);
+    }
+
+    //  }
+    // console.log(item.userS);
+    // const a = item.userS.map((itemUser) => {
+    //   return itemUser.alert;
+    // });
+    // return a[0];
   };
 
   const handleCheckTimeAlert = async () => {
