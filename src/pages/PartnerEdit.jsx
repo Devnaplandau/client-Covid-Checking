@@ -214,6 +214,9 @@ const PartnerInfo = ({ partner, onUpdateFalse, onUpdateSuccess }) => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={nameErr}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </FormControl>
                 <FormControl fullWidth margin="normal">

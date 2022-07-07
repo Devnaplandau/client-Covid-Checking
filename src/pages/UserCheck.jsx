@@ -14,9 +14,13 @@ import {
   Paper,
   Radio,
   Typography,
+  Switch,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 // import placeApi from "../api/placeApi";
 import { DataGrid } from "@mui/x-data-grid";
 import moment from "moment";
@@ -30,7 +34,6 @@ import { CustomDialog } from "../components";
 // import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-
 // -------------------------------------
 const UserCheck = () => {
   const [userList, setUserList] = useState();
@@ -41,6 +44,8 @@ const UserCheck = () => {
   const [timeStart, setTimeStart] = useState("");
   const [timeEnd, setTimeEnd] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [check, setCheck] = useState(undefined);
 
   const [timeAlert, setTimeAlert] = useState("");
   // const [delUserCheck, setDelUserCheck] = useState();
@@ -96,7 +101,7 @@ const UserCheck = () => {
     {
       id: 6,
       field: "alert",
-      headerName: "Đánh Dấu",
+      headerName: "Cảnh báo",
     },
     {
       field: "dateCheck",
@@ -202,7 +207,7 @@ const UserCheck = () => {
           : setTimeCover >= value.timeStart && setTimeCover <= value.timeEnd;
       });
       setUserList(filter);
-      alert("filter đày đủ time");
+      // alert("filter đày đủ time");
     } else {
       const filter = req.filter((item) => {
         const setTimeCover = moment(item.createdAt).format("HH:mm:ss");
@@ -379,9 +384,9 @@ const UserCheck = () => {
           : req;
       });
 
-      // console.log(filter);
       setUserList(filter);
-      alert("fitler thiếu giờ");
+
+      // alert("fitler thiếu giờ");
     }
     setIsLoading(false);
   };
@@ -445,18 +450,20 @@ const UserCheck = () => {
 
   const handleGetValueCheckBox = async (value, e) => {
     console.log(value);
-    // setCheckBox(e.target.checked);
     sendDateCheck(value);
   };
 
   // xử lí check
   const sendDateCheck = async (value) => {
     // console.log(value);
-    // console.log(value);
     const setChecked = value.includes("true");
-    console.log(value.indexOf("|"));
+    const token = value.substr(value.indexOf("token:") + 6);
+    console.log(token);
     if (setChecked == true) {
-      const sliceId = value.substr(value.indexOf("|") + 1);
+      const sliceId = value.substr(
+        value.indexOf("|") + 1,
+        value.indexOf("token") - 6
+      );
 
       const params = {
         alert: setChecked,
@@ -465,25 +472,28 @@ const UserCheck = () => {
       console.log(params);
       try {
         const res = await useApi.update(sliceId, params);
+
+        //  gưi thông báo về app
         // -------------------------
-        axios.defaults.baseURL = "";
+
         await axios({
           method: "post",
-          url: "https://onesignal.com/api/v1/notifications",
+          url: "https://fcm.googleapis.com/fcm/send",
           headers: {
             "Content-Type": "application/json; charset=utf-8",
             Authorization:
-              "Basic N2M3Nzk2NGQtMWQ4NC00NDExLTkyODItMDc5YTJhNWJjOGZm",
+              "key=AAAAArivYXM:APA91bFTJznQ8zGsrTcMWuVVFuJ2GhDcALQSLhZWyrSXFfYybjVMjGSFW-QoMvubE_VBjBpLUn-RPxNTeA56fCjALEBhkRWnta72hCX04A-TrdWOhE3C5xANFTyTiFvkpmRBGG4gUtjp",
           },
           data: {
-            app_id: "7bffda8a-cda4-422a-8019-0a42d73658c2",
-            headings: { en: "Cảnh Báo !" },
-            contents: { en: "Bạn đã tiếp xúc gần với người bị nhiễm." },
-            included_segments: ["All"],
+            notification: {
+              title: "Nhuat",
+              body: "Khong co gi",
+            },
+            to: `${token}`,
           },
         });
         // =========================
-        console.log(res);
+        // console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -493,13 +503,17 @@ const UserCheck = () => {
       const setIsChecked = false;
       const setTime = "";
 
-      const sliceId = value.substr(value.indexOf("|") + 1);
+      const sliceId = value.substr(
+        value.indexOf("|") + 1,
+        value.indexOf("token") - 7
+      );
+      // console.log("false :", sliceId);
       const params = {
         alert: setIsChecked,
         dateCheck: setTime,
       };
       try {
-        const res = await useApi.update(sliceId, params);
+        await useApi.update(sliceId, params);
         // console.log(res);
       } catch (err) {
         console.log(err);
@@ -509,21 +523,13 @@ const UserCheck = () => {
 
   // handle check by An
   const handleCheck = (item) => {
-    // console.log(item.length);
-    // if (item.length <= 1) {
+    // console.log(item);
     for (let itemValue of item.userS) {
       return itemValue.alert;
-      // console.log(a);
     }
-
-    //  }
-    // console.log(item.userS);
-    // const a = item.userS.map((itemUser) => {
-    //   return itemUser.alert;
-    // });
-    // return a[0];
   };
 
+  // -------------------------------------------
   const handleCheckTimeAlert = async () => {
     try {
       const res = await useApi.getPlaceUser();
@@ -807,13 +813,17 @@ const UserCheck = () => {
                   </td>
                   <td scope="row">
                     <Checkbox
-                      // defaultChecked
-                      defaultChecked={handleCheck(item)}
-                      type="checkbox"
+                      sx={{
+                        display: "flex",
+                      }}
+                      icon={<AccessTimeOutlinedIcon />}
+                      checked={handleCheck(item)}
                       onChange={(e) =>
                         handleGetValueCheckBox(
                           `${e.target.checked}|${item.userS.map(
                             (itemUser) => itemUser.id
+                          )} |token:${item.userS.map(
+                            (itemUser) => itemUser.tokenUser
                           )}`,
                           e
                         )
@@ -824,7 +834,7 @@ const UserCheck = () => {
                     {item.userS.map((itemUser) =>
                       itemUser.dateCheck
                         ? moment(itemUser.dateCheck).format("DD/MM/YYYY")
-                        : "Chưa Có"
+                        : "Trạng thái bình thường"
                     )}
                   </td>
                 </tr>

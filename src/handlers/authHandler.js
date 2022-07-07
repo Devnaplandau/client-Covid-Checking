@@ -25,10 +25,10 @@ export const logout = (navigator) => {
   if (localStorage.getItem("token")) {
     localStorage.removeItem("token");
     navigator("/login/admin");
-  }
-  if (localStorage.getItem("tokenPartner")) {
+  } else if (localStorage.getItem("tokenPartner")) {
     localStorage.removeItem("tokenPartner");
     localStorage.removeItem("namePartner");
+    localStorage.removeItem("idPartner");
     navigator("/login/partner");
   }
 };

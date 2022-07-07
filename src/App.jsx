@@ -51,9 +51,8 @@ function App() {
           <Route path="/feedback" element={<FeedBack />} />
         </Route>
       </Routes>
-      {/* <Route path="/partner" element={<AppLayoutPartner />} /> */}
-      {/* <Route path="/partner" element={<AppLayoutPartner />}></Route> */}
     </BrowserRouter>
+    // ================
   );
 }
 
