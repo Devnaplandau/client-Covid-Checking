@@ -5,6 +5,7 @@ import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SystemUpdateAltOutlinedIcon from "@mui/icons-material/SystemUpdateAltOutlined";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
+import MoreTimeOutlinedIcon from "@mui/icons-material/MoreTimeOutlined";
 import {
   Box,
   Button,
@@ -449,16 +450,16 @@ const UserCheck = () => {
   };
 
   const handleGetValueCheckBox = async (value, e) => {
-    console.log(value);
+    // console.log(value);
     sendDateCheck(value);
   };
 
-  // xử lí check
+  // xử lí check and send notification for user
   const sendDateCheck = async (value) => {
     // console.log(value);
     const setChecked = value.includes("true");
     const token = value.substr(value.indexOf("token:") + 6);
-    console.log(token);
+    // console.log(token);
     if (setChecked == true) {
       const sliceId = value.substr(
         value.indexOf("|") + 1,
@@ -475,25 +476,23 @@ const UserCheck = () => {
 
         //  gưi thông báo về app
         // -------------------------
-
         await axios({
           method: "post",
           url: "https://fcm.googleapis.com/fcm/send",
           headers: {
             "Content-Type": "application/json; charset=utf-8",
             Authorization:
-              "key=AAAAArivYXM:APA91bFTJznQ8zGsrTcMWuVVFuJ2GhDcALQSLhZWyrSXFfYybjVMjGSFW-QoMvubE_VBjBpLUn-RPxNTeA56fCjALEBhkRWnta72hCX04A-TrdWOhE3C5xANFTyTiFvkpmRBGG4gUtjp",
+              "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
           },
           data: {
             notification: {
-              title: "Nhuat",
-              body: "Khong co gi",
+              title: "Cảnh báo !",
+              body: "Bạn đã bị nhiễm Covid - Nhanh chóng mở ứng dụng và kiểm tra trạng thái ",
             },
             to: `${token}`,
           },
         });
         // =========================
-        // console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -512,6 +511,7 @@ const UserCheck = () => {
         alert: setIsChecked,
         dateCheck: setTime,
       };
+      console.log(params);
       try {
         await useApi.update(sliceId, params);
         // console.log(res);
@@ -816,8 +816,17 @@ const UserCheck = () => {
                       sx={{
                         display: "flex",
                       }}
-                      icon={<AccessTimeOutlinedIcon />}
-                      checked={handleCheck(item)}
+                      icon={
+                        `${item.userS.filter(
+                          (itemUser) => itemUser.alert == true
+                        )}` ? (
+                          <AccessTimeOutlinedIcon />
+                        ) : (
+                          <MoreTimeOutlinedIcon />
+                        )
+                      }
+                      defaultChecked={handleCheck(item)}
+                      //  checked={handleCheck(item)}
                       onChange={(e) =>
                         handleGetValueCheckBox(
                           `${e.target.checked}|${item.userS.map(
