@@ -86,7 +86,7 @@ const Dashboard = () => {
               <CardContent>
                 {summaryData && (
                   <SummaryInfo
-                    title="Số Vaccine Có Sẵn"
+                    title="Tổng Số Vaccine Có Sẵn"
                     number={summaryData.availableVaccineDoes.toLocaleString(
                       "de-DE"
                     )}
