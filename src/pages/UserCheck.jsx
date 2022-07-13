@@ -487,7 +487,7 @@ const UserCheck = () => {
           data: {
             notification: {
               title: "Cảnh báo !",
-              body: "Bạn đã bị nhiễm Covid - Nhanh chóng mở ứng dụng và kiểm tra trạng thái ",
+              body: "Bạn đã tiếp xúc gần với người nhiễm Covid - Nhanh chóng mở ứng dụng và kiểm tra trạng thái ",
             },
             to: `${token}`,
           },
@@ -515,6 +515,23 @@ const UserCheck = () => {
       try {
         await useApi.update(sliceId, params);
         // console.log(res);
+
+        await axios({
+          method: "post",
+          url: "https://fcm.googleapis.com/fcm/send",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization:
+              "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
+          },
+          data: {
+            notification: {
+              title: "Thông báo !",
+              body: "Bạn đã hoàn thành cách ly rồi đó, chúc mừng bạn quay lại với cộng đồng!",
+            },
+            to: `${token}`,
+          },
+        });
       } catch (err) {
         console.log(err);
       }

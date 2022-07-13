@@ -89,7 +89,7 @@ const SideBar = () => {
       display: localStorage.getItem("token") ? true : partner.permissionScan,
     },
     {
-      text: "Ý Kiến & Đánh Giá",
+      text: "Phản Hồi & Ý Kiến",
       path: "/feedback",
       icon: <CommentOutlinedIcon />,
       display: true,

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 
 const QRscan = () => {
   const [onLoadUser, setOnLoadUser] = useState(false);
@@ -61,6 +62,15 @@ const QRscan = () => {
               >
                 Tải Lại
               </Button>
+              <Button
+                disabled
+                variant="contained"
+                // component={Link}
+                // to={`/user/${user.id}`}
+                // sx={{ textTransform: "none" }}
+              >
+                Tìm Kiếm Nhanh
+              </Button>
             </CardActions>
           </Card>
         </Grid>
@@ -73,6 +83,7 @@ const QRscan = () => {
                   <Typography variant="h6">Thông Tin Người Dùng</Typography>
                 }
               />
+
               <CardContent>
                 <Grid container spacing={4}>
                   <Grid item xs={6}>
@@ -137,6 +148,7 @@ const QRscan = () => {
                   </Typography>
                 }
               ></CardHeader>
+
               <CardContent>
                 {user && <UserVaccinated vaccinatedList={user.vaccinated} />}
               </CardContent>

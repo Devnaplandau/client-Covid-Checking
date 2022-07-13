@@ -48,13 +48,6 @@ const Vaccine = () => {
       flex: 1,
       renderCell: (params) => params.value.toLocaleString("de-DE"),
     },
-    // {
-    //   field: "vaccinated",
-    //   headerName: "Vaccine Đã Tiêm",
-    //   align: "center",
-    //   flex: 1,
-    //   renderCell: (params) => params.value.toLocaleString("de-DE"),
-    // },
     {
       field: "id",
       headerName: "Vaccine Hiện Có",
@@ -63,16 +56,24 @@ const Vaccine = () => {
       renderCell: (params) =>
         (params.row.quantity - params.row.vaccinated).toLocaleString("de-DE"),
     },
+
     {
       field: "vaccineLots",
-      headerName: "Số Vaccine Trong Lô",
+      headerName: "Số Loại Vaccine Trong Lô",
       flex: 1,
       align: "center",
       renderCell: (params) => params.value.length,
     },
     {
+      field: "vaccinated",
+      headerName: "Số Vaccine Đã Dùng",
+      align: "center",
+      flex: 1,
+      renderCell: (params) => params.value.toLocaleString("de-DE"),
+    },
+    {
       field: "createdAt",
-      headerName: "Ngày",
+      headerName: "Thời Gian Tạo Lô",
       flex: 1,
       renderCell: (params) =>
         moment(params.value).format("DD/MM/YYYY HH:mm:ss"),

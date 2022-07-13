@@ -16,6 +16,7 @@ import { PageHeader } from "../components";
 import { LoadingButton } from "@mui/lab";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const FeedBack = () => {
   const navigate = useNavigate();
   const [feedBack, setFeedBack] = useState([]);
@@ -39,6 +40,7 @@ const FeedBack = () => {
     try {
       const res = await feedBackApi.getAll();
       setFeedBack(res);
+      console.log(res);
       setOnLoad(false);
       navigate("/feedback");
     } catch (err) {
@@ -46,11 +48,30 @@ const FeedBack = () => {
     }
   };
 
-  const deleteComment = async (id) => {
+  const deleteComment = async (id, tokenUser) => {
+    // console.log(tokenUser);
     try {
       await feedBackApi.delete(id);
       const res = await feedBackApi.getAll();
       setFeedBack(res);
+
+      // set notication delete
+      await axios({
+        method: "post",
+        url: "https://fcm.googleapis.com/fcm/send",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization:
+            "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
+        },
+        data: {
+          notification: {
+            title: "Thông báo !",
+            body: "Phản hồi của bạn đã được xử lí !",
+          },
+          to: `${tokenUser}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +81,7 @@ const FeedBack = () => {
   return (
     <>
       <PageHeader
-        title="Tổng Hợp Ý Kiến và Đánh Giá"
+        title="Tổng Hợp Phản Hồi Và Ý Kiến"
         rightContent={
           <LoadingButton
             variant="contained"
@@ -146,7 +167,7 @@ const FeedBack = () => {
                     aria-label="delete"
                     color="error"
                     size="medium"
-                    onClick={() => deleteComment(item.id)}
+                    onClick={() => deleteComment(item.id, item.user.tokenUser)}
                   >
                     <DeleteOutlinedIcon />
                   </IconButton>
