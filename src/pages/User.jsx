@@ -29,6 +29,7 @@ const User = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [info, setInfo] = useState("");
   const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     const getUsers = async () => {
@@ -118,16 +119,20 @@ const User = () => {
     setInfo(value);
   };
 
-  const handleDataAddress = (value) => {
-    setAddress(value);
-  };
+  // const handleDataAddress = (value) => {
+  //   setAddress(value);
+  // };
 
+  const handleDataPhone = (value) => {
+    setPhone(value);
+  };
   const sendData = () => {
     const params = {
       user: info.toLowerCase(),
-      place: address.toLowerCase(),
+      // place: address.toLowerCase(),
+      phone: phone,
     };
-    // console.log(userList);
+    // console.log(params);
     filterData(params);
     setIsLoading(true);
   };
@@ -136,7 +141,8 @@ const User = () => {
     const res = await useApi.getAll();
     setUserList(res);
     setInfo("");
-    setAddress("");
+    // setAddress("");
+    setPhone("");
   };
 
   const filterData = async (value) => {
@@ -144,15 +150,16 @@ const User = () => {
     try {
       const res = await useApi.getAll();
       const filter = res.filter((item) => {
-        console.log(item.fullName.toLowerCase());
-        return value.user.length > 1 && value.place.length > 1
+        // console.log(item.fullName.toLowerCase());
+        // console.log(item);
+        return value.user.length > 1 && value.phone.length > 1
           ? item.fullName.toLowerCase().trim() == value.user &&
-              item.address.toLowerCase() == value.place
-          : value.user.length == 0 && value.place.length > 1
-          ? item.address.toLowerCase() == value.place
+              item.phoneNumber == value.phone
+          : value.user.length == 0 && value.phone.length > 1
+          ? item.phoneNumber == value.phone
           : item.fullName.toLowerCase().trim() == value.user;
       });
-      console.log(filter);
+      // console.log(filter);
       setUserList(filter);
       setIsLoading(false);
     } catch (error) {
@@ -205,7 +212,7 @@ const User = () => {
             mb: 2,
           }}
         />
-        <TextField
+        {/* <TextField
           label="Tên Địa Chỉ"
           color="primary"
           fullWidth
@@ -223,6 +230,25 @@ const User = () => {
           }}
           value={address}
           onChange={(e) => handleDataAddress(e.target.value)}
+        /> */}
+        <TextField
+          label="Số điện thoại"
+          color="primary"
+          fullWidth
+          variant="outlined"
+          placeholder="Nhập từ khóa muốn tìm kiếm . . ."
+          sx={{
+            mb: 2,
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <OtherHousesOutlinedIcon />
+              </InputAdornment>
+            ),
+          }}
+          value={phone}
+          onChange={(e) => handleDataPhone(e.target.value)}
         />
 
         <LoadingButton

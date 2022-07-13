@@ -408,7 +408,7 @@ const UserCheck = () => {
           "Ngày Khai Báo": moment(item.createdAt).format("DD/MM/YYYY"),
           "Thời Gian Khai Báo": moment(item.createdAt).format("HH:mm:ss"),
           "Đánh Dấu": user.alert,
-          "Thời Gian Đánh Dấu": user.dateCheck
+          "Thời Gian Hoàn Thành Cách Ly": user.dateCheck
             ? moment(user.dateCheck).format("DD/MM/YYYY HH:mm:ss")
             : "Chưa Có",
         };
@@ -608,7 +608,7 @@ const UserCheck = () => {
   };
   return (
     <>
-      <PageHeader title="Truy Vấn Khai Báo Tiêm Chủng" />
+      <PageHeader title="Truy Vấn Khai Báo" />
       <Box
         sx={{
           width: "80%",
@@ -748,7 +748,7 @@ const UserCheck = () => {
       {/* ------------------------ */}
 
       <PageHeader
-        title="Bảng Truy Vấn Tiêm Chủng"
+        title="Bảng Truy Vấn Khai Báo"
         // rightContent={
         //   <Typography variant="h6" component="h2">
         //     Kiểm Tra

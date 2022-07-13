@@ -17,13 +17,18 @@ import {
 import moment from "moment";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const QRscan = () => {
+  const navigate = useNavigate();
   const [onLoadUser, setOnLoadUser] = useState(false);
   const [user, setUser] = useState();
 
   const handleErr = (err) => {
     console.log(err);
+  };
+  const handleNavigate = (id) => {
+    navigate(`/user/${id}`);
   };
 
   const handleScan = async (data) => {
@@ -54,7 +59,12 @@ const QRscan = () => {
                 facingMode="user"
               />
             </CardContent>
-            <CardActions>
+            <CardActions
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Button
                 variant="contained"
                 disableElevation
@@ -63,11 +73,8 @@ const QRscan = () => {
                 Tải Lại
               </Button>
               <Button
-                disabled
                 variant="contained"
-                // component={Link}
-                // to={`/user/${user.id}`}
-                // sx={{ textTransform: "none" }}
+                onClick={() => handleNavigate(user.id)}
               >
                 Tìm Kiếm Nhanh
               </Button>
