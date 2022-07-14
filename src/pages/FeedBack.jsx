@@ -9,7 +9,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import profile from "../assets/images/profile.png";
-import { FormControlLabel, Checkbox } from "@mui/material";
+import { FormControlLabel, Checkbox, IconButton } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import moment from "moment";
 import { PageHeader } from "../components";
@@ -56,22 +56,24 @@ const FeedBack = () => {
     try {
       await feedBackApi.update(id, params);
       // set notication status token
-      await axios({
-        method: "post",
-        url: "https://fcm.googleapis.com/fcm/send",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          Authorization:
-            "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
-        },
-        data: {
-          notification: {
-            title: "Thông báo !",
-            body: "Phản hồi của bạn đã được xử lí !",
+      if (e.target.checked == true) {
+        await axios({
+          method: "post",
+          url: "https://fcm.googleapis.com/fcm/send",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization:
+              "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
           },
-          to: `${token}`,
-        },
-      });
+          data: {
+            notification: {
+              title: "Thông báo !",
+              body: "Phản hồi của bạn đã được xử lí !",
+            },
+            to: `${token}`,
+          },
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -84,34 +86,34 @@ const FeedBack = () => {
     }
   };
 
-  // const deleteComment = async (id, tokenUser) => {
-  //   // console.log(tokenUser);
-  //   try {
-  //     await feedBackApi.delete(id);
-  //     const res = await feedBackApi.getAll();
-  //     setFeedBack(res);
+  const deleteComment = async (id) => {
+    // console.log(tokenUser);
+    try {
+      await feedBackApi.delete(id);
+      const res = await feedBackApi.getAll();
+      setFeedBack(res);
 
-  //     // set notication delete
-  //     await axios({
-  //       method: "post",
-  //       url: "https://fcm.googleapis.com/fcm/send",
-  //       headers: {
-  //         "Content-Type": "application/json; charset=utf-8",
-  //         Authorization:
-  //           "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
-  //       },
-  //       data: {
-  //         notification: {
-  //           title: "Thông báo !",
-  //           body: "Phản hồi của bạn đã được xử lí !",
-  //         },
-  //         to: `${tokenUser}`,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+      // set notication delete
+      // await axios({
+      //   method: "post",
+      //   url: "https://fcm.googleapis.com/fcm/send",
+      //   headers: {
+      //     "Content-Type": "application/json; charset=utf-8",
+      //     Authorization:
+      //       "key=AAAAtlqzzoc:APA91bG74FOUVxIFPwYeWcVz225WmNzwYN_FtUq2jjIEMCtuD160ZkOIi9Bi3p_qjvsMg6q7ErRKkRxTZdni8_T1Ks4oxjib8cWDjdaVfJktdN0fw0cVVjMSaylYwWPNzBnu8mtrW6AW",
+      //   },
+      //   data: {
+      //     notification: {
+      //       title: "Thông báo !",
+      //       body: "Phản hồi của bạn đã được xử lí !",
+      //     },
+      //     to: `${tokenUser}`,
+      //   },
+      // });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   console.log(feedBack);
   return (
@@ -196,22 +198,30 @@ const FeedBack = () => {
                   </React.Fragment>
                 }
               />
-              {/* <ListItem
+              <ListItem
                 secondaryAction={
                   <IconButton
+                    sx={{
+                      display: `${
+                        localStorage.getItem("tokenPartner") ? "none" : "block"
+                      }`,
+                    }}
                     edge="end"
                     aria-label="delete"
                     color="error"
                     size="medium"
-                    onClick={() => deleteComment(item.id, item.user.tokenUser)}
+                    onClick={() => deleteComment(item.id)}
                   >
                     <DeleteOutlinedIcon />
                   </IconButton>
                 }
-              ></ListItem> */}
+              ></ListItem>
               <FormControlLabel
+                sx={{
+                  width: "250px",
+                }}
                 control={<Checkbox defaultChecked={handleChecked(item)} />}
-                label={item.statusComment ? "Hoàn thành" : "Chưa hoàn thành"}
+                label={item.statusComment ? "Đã Xử Lí" : "Chưa Xử Lí"}
                 onChange={(e) => handleCheck(e, item.id, item.user.tokenUser)}
               />
             </ListItem>
