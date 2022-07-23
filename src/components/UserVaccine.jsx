@@ -73,22 +73,16 @@ const UserVaccine = ({ user }) => {
 
       renderCell: (params) => params.value.name,
     },
-    // {
-    //   field: "createdAt",
-    //   headerName: "Ngày Khai Báo",
-    //   flex: 1,
-    //   renderCell: (params) =>
-    //     moment(params.value).format("DD/MM/YYYY HH:mm:ss"),
-    // },
+
     {
       field: "createdAt",
-      headerName: "Ngày Khai Báo",
+      headerName: "Ngày Tiêm",
       flex: 1,
       renderCell: (params) => moment(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "ok",
-      headerName: "Giờ Khai Báo",
+      headerName: "Giờ Tiêm",
       flex: 1,
       renderCell: (params) => moment(params.row.createdAt).format("HH:mm:ss"),
     },

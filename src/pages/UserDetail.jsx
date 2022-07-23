@@ -63,6 +63,7 @@ const UserDetail = () => {
     setOnDelete(true);
     try {
       await useApi.delete(id);
+      await useApi.delUserPlace(id);
       setOnDelete(false);
       navigate("/user");
     } catch (err) {

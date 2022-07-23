@@ -11,6 +11,7 @@ const useApi = {
     axiosClient.post(`${userEndPoint}/vaccinated`, params),
   delete: (id) => axiosClient.delete(`${userEndPoint}/${id}`),
   getPlaceUser: () => axiosClient.get(`${userEndPoint}/ok/getallplaceanduser`),
+  delUserPlace: (id) => axiosClient.delete(`${userEndPoint}/${id}`),
 };
 
 export default useApi;
